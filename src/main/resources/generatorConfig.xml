@@ -2,7 +2,7 @@
 <!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
 <generatorConfiguration >
 	<!-- 设置mysql驱动路径 -->
-	<classPathEntry location="C:/Users/dell/.m2/repository/mysql/mysql-connector-java/8.0.16/mysql-connector-java-8.0.16.jar" />
+	<classPathEntry location="C:/Users/dell/.m2/repository/mysql/mysql-connector-java/8.0.19/mysql-connector-java-8.0.19.jar" />
 	<!-- 此处指定生成针对MyBatis3的DAO -->
 	<context id="mysql"  targetRuntime="MyBatis3">
 		<!-- 用来除去时间信息的，这在配合类似subversion的代码管理工具时使用很有效，因为可以减少没有必要的注释迁入 -->
@@ -12,7 +12,8 @@
 		</commentGenerator>
 		<!-- jdbc连接信息 -->
 		<jdbcConnection driverClass="com.mysql.jdbc.Driver"  
-			connectionURL="jdbc:mysql://127.0.0.1:3306/dict?serverTimezone=UTC&amp;nullCatalogMeansCurrent=true" userId="root" password="root" />
+			connectionURL="jdbc:mysql://127.0.0.1:3306/dict?serverTimezone=UTC&amp;nullCatalogMeansCurrent=true" userId="root" password="root
+" />
 		<!-- javaTypeResolver式类型转换的信息 -->
 		<javaTypeResolver>
 			<property name="forceBigDecimals" value="false" />
