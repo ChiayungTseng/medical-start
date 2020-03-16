@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css?11332">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js?11332"></script>
+    <script src="https://cdn.staticfile.org/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js?11332"></script>
+    <script src="/static/js/team.js"></script>
+    <script src="/static/js/arena.js?123"></script>
+    <script>
+        var socket;
+        var teamId;
+        timer = new Object();
+        var oldDate = new Date();
+        seconds =10;
+        warrior = new Object();
+        arenaBeing = new Object();
+        dictWsToken = $.cookie('dictWsToken');
+        if(typeof(WebSocket) == "undefined") {
+            console.log("您的浏览器不支持WebSocket");
+        }else{
+            console.log("您的浏览器支持WebSocket");
+            //实现化WebSocket对象，指定要连接的服务器地址与端口  建立连接
+            //等同于socket = new WebSocket("ws://localhost:8083/checkcentersys/websocket/20");
+            console.log($.cookie('dictWsToken'));
+            socket = new WebSocket("ws://"+window.location.host+"/dictSocket/"+$.cookie('dictWsToken'));
+            //打开事件
+            socket.onopen = function() {
+                console.log("Socket 已打开");
+            };
+            socket.onmessage = function(msg) {
+                try{
+                    //获得消息事件
+                    // console.log(msg.data);
+                    var data =JSON.parse(msg.data);
+                    var type = data.type;
+                    if(type=="WarriorLoad"){
+                        warrior =data.note;
+                        console.log(warrior);
+                    }else if(type=="TeamBuild"||type=="TeamJoin"){
+                        teamRefresh(data.note);
+                        teamId =data.note.id;
+                    }else if(type=="ArenaStart"){
+                        ArenaStart(data.note);
+                    }else if(type=="RoundStart"){
+                        RoundStart(data.note);
+                    }else if(type="AnswerSelection"){
+                        AnswerSelection(data.note);
+                    }
+                }catch(e) {
+                    console.log('error：'+e);
+                    return false;
+                }
+
+                //发现消息进入    开始处理前端触发逻辑
+            };
+            //关闭事件
+            socket.onclose = function() {
+                console.log("Socket已关闭");
+            };
+            //发生了错误事件
+            socket.onerror = function() {
+                alert("Socket发生了错误");
+                //此时可以尝试刷新页面
+            }
+
+        }
+
+
+        function requestObj(type,data){
+            var req = new Object();
+            req.type =type;
+            req.data = data;
+            req.wsToken = dictWsToken;
+            return req;
+        }
+
+
+
+
+        $(document).ready(function (){
+            $("#arena").hide();
+        });
+    </script>
+</head>
+<body>
+    <div id="headButton" class="container">
+        <div id ="btnRow" class="row" >
+            <div class="col-xs-6" >
+                <button id="tbBtn" class="btn btn-primary btn-block" onclick=teamBuild()>TeamBuild</button>
+            </div>
+            <div class="col-xs-6">
+                <button id="alBtn" class="btn btn-primary btn-block" onclick=arenaLoad()>ArenaLoad</button>
+            </div>
+        </div>
+        <div id ="btnRow2" class="row" >
+            <div class="col-xs-6" >
+                <button id="tjBtn" class="btn btn-primary btn-block" onclick=teamJoin()>TeamJoin</button>
+            </div>
+            <div class="col-xs-6">
+                <input type="text" class="form-control" id="teamJoinId" placeholder="请输入teamId"/>
+            </div>
+        </div>
+    </div>
+
+    <div id="panel" class="container">
+        <div id ='teamIdRow' class='row'>
+            <div class='col-xs-6'>TeamId:</div>
+            <div id='teamId' class='col-xs-6'></div>
+            <table id='teamTable' class='table'>
+                <thead>
+                    <tr><th>队员</th></tr>
+                </thead>
+                <tbody id='teamTableBody'>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="arena" class="container">
+        <div id ="timeRow" class="row" >
+            <div class="col-xs-4"></div>
+            <div class="col-xs-1" >
+                <button id="ourScore" type="button" class="btn btn-primary  btn-info" ></button>
+            </div>
+            <div class="col-xs-1">
+                <button id="timeCount" type="button" class="btn btn-primary  btn-warning" >10</button>
+            </div>
+            <div class="col-xs-1">
+                <button id="deScore" type="button" class="btn btn-primary btn-info"></button>
+            </div>
+            <div class="col-xs-4" ></div>
+        </div>
+        <div id ="questionRow" class="row" >
+            <div id='teammateRow'  class="col-xs-2">
+            </div>
+            <div class="col-xs-8" >
+                <div class="panel panel-info" >
+                    <div id="questionPanel" class="col-xs-12 panel-body" style="font-size: 17px; padding-left:1px; padding-right:1px;">
+                    </div>
+                </div>
+            </div>
+            <div  id='defenderRow' class="col-xs-2" >
+           </div>
+        </div>
+        <br>
+        <br>
+        <div id ="answerRow" class="row" >
+            <!--<div class="col-xs-2">
+                <div class="row  text-center">
+                    <div id="selectionTagLeft1" class="col-xs-12  text-center">
+                    </div>
+                </div><br>
+                <div class="row  text-center">
+                    <div id="selectionTagLeft2" class="col-xs-12  text-center">
+                    </div>
+                </div><br>
+                <div class="row  text-center">
+                    <div id="selectionTagLeft3" class="col-xs-12  text-center">
+                    </div>
+                </div>
+            </div>-->
+            <div class="col-xs-12  text-center" >
+                <div class="row  text-center" style="padding-left:0px; padding-right:0px;">
+                    <div id="selectionTagLeft0" class="col-xs-2  text-center" style="padding-left:0px; padding-right:0px;"></div>
+                    <div class="col-xs-8  text-center">
+                        <button id="selection0" type="button" class="btn btn-primary  btn-info  col-xs-12"  style="font-size: 20px;" onclick=selection(0)>A</button>
+                    </div>
+                    <div id="selectionTagRight0" class="col-xs-2  text-center"></div>
+                </div><br>
+                <div class="row  text-center">
+                    <div id="selectionTagLeft1" class="col-xs-2  text-center"></div>
+                    <div class="col-xs-8  text-center">
+                        <button id="selection1" type="button" class="btn btn-primary  btn-info  col-xs-12" style="font-size: 20px;" onclick=selection(1)>B</button>
+                    </div>
+                    <div id="selectionTagRight1" class="col-xs-2  text-center"></div>
+                </div><br>
+                <div class="row  text-center">
+                    <div id="selectionTagLeft2" class="col-xs-2  text-center"></div>
+                    <div class="col-xs-8  text-center">
+                        <button id="selection2" type="button" class="btn btn-primary  btn-info  col-xs-12" style="font-size: 20px;" onclick=selection(2)>C</button>
+                    </div>
+                    <div id="selectionTagRight2" class="col-xs-2  text-center"></div>
+                </div><br>
+                <div class="row  text-center">
+                    <div id="selectionTagLeft3" class="col-xs-2  text-center"></div>
+                    <div class="col-xs-8  text-center">
+                        <button id="selection3" type="button" class="btn btn-primary  btn-info  col-xs-12" style="font-size: 20px;" onclick=selection(3)>D</button>
+                    </div>
+                    <div id="selectionTagRight3" class="col-xs-2  text-center"></div>
+                </div>
+            </div>
+            <!--<div class="col-xs-2" >
+                <div class="row  text-center">
+                    <div id="selectionTagRight0" class="col-xs-12  text-center">
+                    </div>
+                </div><br>
+                <div class="row  text-center">
+                    <div id="selectionTagRight1" class="col-xs-12  text-center">
+                    </div>
+                </div><br>
+                <div class="row  text-center">
+                    <div id="selectionTagRight2" class="col-xs-12  text-center">
+                    </div>
+                </div><br>
+                <div class="row  text-center">
+                    <div id="selectionTagRight3" class="col-xs-12  text-center">
+                    </div>
+                </div>
+            </div>-->
+        </div>
+    </div>
+</body>
+</html>

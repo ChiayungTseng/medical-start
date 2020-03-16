@@ -1,0 +1,21 @@
+.eModal-w{
+    /*padding:6px 10px 6px 20px;*/
+    /*background-color:#007DCF;*/
+    border:0px;
+    /*vertical-align:center;*/
+    width:100%;
+}
+.eModal-button{
+    height:80px;
+}
+
+
+
+.myModal-header{
+    padding:6px 10px 6px 20px;
+    /*background-color:#007DCF;*/
+    border:0px;
+    vertical-align:center;
+    width:100%;
+    height:95%;
+}
