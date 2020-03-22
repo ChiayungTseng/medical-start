@@ -36,34 +36,23 @@
                     data: JSON.stringify(user),
                     // dataType: 'json',
                     contentType: 'application/json',
-                    url:"/user/login",
+                    url:"/addLogin",
                     success:function(result){
+                        window.alert(result);
+                        if(result=="登录成功"){
+                            window.location.href='/index.html'
+                        }else{
+                            $('#name').val(result);
+                        }
                         console.log(JSON.stringify(result));
-                        $.cookie('userToken', result.data);
+
                     },
                     error:function(xhr, textStatus, errorThrown){
                         console.error(xhr);
                     }
                 });
 
-                $.ajax({
-                    async:false,
-                    type:"GET",
-                    headers: {
-                        'userToken':$.cookie('userToken')
-                    },
-                    // dataType: 'json',
-                    // contentType: 'application/json',
-                    url:"/webSocket/dictToken",
-                    success:function(result){
-                        console.log(JSON.stringify(result));
-                        $.cookie('dictWsToken', result.data);
-                        window.location.href = "dict.html";
-                    },
-                    error:function(xhr, textStatus, errorThrown){
-                        console.log("");
-                    }
-                });
+
             });
         });
 
@@ -82,7 +71,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">Diau-Charn</a>
+                <a class="navbar-brand" href="#">medical</a>
             </div>
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav">

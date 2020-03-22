@@ -65,9 +65,9 @@
                 <tr v-for="(facility,index) in facilities">
                     <td><input type="checkbox" :value="index" v-model="checkedRows"></td>
                     <td>{{index+1}}</td>
-                    <td contentEditable="true">{{facility.code}}</td>
-                    <td contentEditable="true">{{facility.name}}</td>
-                    <td contentEditable="true">{{facility.date}}</td>
+                    <td contentEditable="true">{{facility.mid}}</td>
+                    <td contentEditable="true">{{facility.mname}}</td>
+                    <td contentEditable="true">{{facility.mbirth}}</td>
                 </tr>
                 </tbody>
             </table>
@@ -85,19 +85,19 @@
                     <div class="row">
                         <div class="col-3">药品编号：</div>
                         <div class="col-9">
-                            <input class="form-control" placeholder="药品编号" v-model="newRow.code">
+                            <input class="form-control" placeholder="药品编号" v-model="newRow.mid">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-3">药品名称：</div>
                         <div class="col-9">
-                            <input class="form-control" placeholder="药品名称" v-model="newRow.name">
+                            <input class="form-control" placeholder="药品名称" v-model="newRow.mname">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-3">采购日期：</div>
                         <div class="col-9">
-                            <input class="form-control" placeholder="采购日期" v-model="newRow.date">
+                            <input class="form-control" placeholder="采购日期" v-model="newRow.mbirth">
                         </div>
                     </div>
                 </div>
