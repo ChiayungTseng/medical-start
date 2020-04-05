@@ -1,7 +1,6 @@
 package com.medical.mapper;
 
 import com.medical.entity.MedicalInfo;
-import com.medical.entity.User;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -17,6 +16,29 @@ public interface MedicalInfoMapper {
     })*/
     List<MedicalInfo> select();
 
-    @Insert("insert into user(username,password) values(#{username},#{password})")
-    public void save(MedicalInfo user);
+    @Select("select * from medicalinfo where mcode= #{mcode} " )
+    MedicalInfo verification(@Param("mcode") String mcode);
+
+    @Select("select * from medicalinfo where mid = #{mid}")
+    MedicalInfo selectByMid(@Param("mid") Integer mid);
+
+    @Select("select * fron medicalinfo where mcode LIKE concat(cancat('%',#{mcode}),'%')")
+    MedicalInfo selectByMcodeOrMname(@Param("mid") String mid);
+
+
+    @Insert( "insert into medicalinfo(mcode,mname,mtype,mbirth,mbuy,msell) " +
+            "values (#{medicalinfo.mcode},#{medicalinfo.mname},#{medicalinfo.mtype},#{medicalinfo.mbirth},#{medicalinfo.mbuy},#{medicalinfo.msell})")
+    public void save(@Param("medicalinfo")MedicalInfo medicalInfo);
+
+    @Update("update medicalinfo set mcode = #{medicalinfo.mcode},mname = #{medicalinfo.mname}," +
+            "mtype = #{medicalinfo.mtype},mbirth = #{medicalinfo.mbirth},mbuy = #{medicalinfo.mbuy},msell = #{medicalinfo.msell} where mid = #{medicalinfo.mid}")
+//    UPDATE medicalinfo set mtype="obc" WHERE mid=1;
+    int update(@Param("medicalinfo")MedicalInfo medicalInfo);
+
+    @Delete("delete from medicalinfo where mid=#{medicalinfo.mid}")
+     int delete(@Param("medicalinfo") MedicalInfo medicalInfo);
+
+
+
 }
+

@@ -10,7 +10,7 @@ spring:
   datasource:
     username: root
     password: tiger
-    url: jdbc:mysql://127.0.0.1:3306/medical?useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/medical?serverTimezone=UTC
     driver-class-name: com.mysql.cj.jdbc.Driver
   resources:
     static-locations: classpath:/static/

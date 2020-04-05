@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>药品管理</title>
+    <title>库存管理</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css">
@@ -20,15 +20,29 @@
 <nav class="navbar navbar-expand-md bg-light nav-light">
     <ul class="navbar-nav">
         <li class="nav-item active" type="button"><a href="emp.html" class="nav-link">员工信息</a></li>
-        <li class="nav-item active" type="button"><a href="#" class="nav-link ">药品信息</a></li>
+        <li class="nav-item active" type="button"><a href="brand_medical.html" class="nav-link ">药品信息</a></li>
         <li class="nav-item" type="button"><a href="branch.html" class="nav-link ">分店信息</a></li>
-        <li class="nav-item" type="button"><a href="drugstock.html" class="nav-link ">库存管理</a></li>
+        <!--<li class="nav-item" type="button"><a href="#" class="nav-link ">库存管理</a></li>-->
+        <!-- Example single danger button -->
+        <div class="btn-group">
+        <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            库存管理
+        </button>
+        <div class="dropdown-menu"  id="vueApp1" >
+
+            <a  class="dropdown-item" href="#" v-for="(facility,index) in facilities">
+                <button  @click="delRows">{{facility.bname}}</button>
+            </a>
+        </div>
+
+    </div>
     </ul>
 </nav>
+
 <div class="container" id="vueApp">
     <div class="row mx-auto w-75" style="margin-top: 20px">
         <div class="col-12 text-center">
-            <h3>药品信息表</h3>
+            <h3>库存管理表</h3>
         </div>
     </div>
     <div class="row mx-auto w-75" style="height: 15px"></div>
@@ -48,6 +62,7 @@
             </div>
         </div>
     </div>
+
     <div class="row mx-auto w-75" style="height: 15px"></div>
     <div class="row mx-auto w-75">
         <div class="col-12">
@@ -56,29 +71,27 @@
                 <tr>
                     <th><input type="checkbox"></th>
                     <th>序号</th>
+                    <th>分店名</th>
                     <th>药品编号</th>
                     <th>药品名称</th>
                     <th>药品类型</th>
-                    <th>采购日期</th>
-                    <th>进货单价/元</th>
-                    <th>销售单价/元</th>
+                    <th>药品库存</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr v-for="(facility,index) in facilities">
                     <td><input type="checkbox" :value="index" v-model="checkedRows"></td>
                     <td>{{index+1}}</td>
-                    <td contentEditable="false" >{{facility.mcode}}</td>
+                    <td contentEditable="false">{{facility.bname}}</td>
+                    <td contentEditable="false">{{facility.mcode}}</td>
                     <td contentEditable="false">{{facility.mname}}</td>
                     <td contentEditable="false">{{facility.mtype}}</td>
-                    <td contentEditable="false">{{facility.mbirth}}</td>
-                    <td contentEditable="false">{{facility.mbuy}}</td>
-                    <td contentEditable="false">{{facility.msell}}</td>
+                    <td contentEditable="false">{{facility.stock}}</td>
                     <td><button @click="update(index)" >编辑</button></td>
-
                 </tr>
                 </tbody>
             </table>
+
         </div>
     </div>
     <!-- 模态框 -->
@@ -196,10 +209,12 @@
 
 <script>
     var datas =[];
+    var datas2 =[];
+
     $.ajax({
         async:false,
         type:"GET",
-        url:"/medical/query",
+        url:"/drugstock/queryall",
         success:function(result){
             datas = result;
         },
@@ -207,6 +222,46 @@
             console.log("");
         }
     });
+
+    $.ajax({
+        async:false,
+        type:"GET",
+        url:"/drugstock/query",
+        success:function(result){
+            datas2 = result;
+        },
+        error:function(xhr, textStatus, errorThrown){
+            console.log("");
+        }
+    });
+
+
+
+    new Vue({
+            el: "#vueApp1",
+            data: {
+                checkAll: false,
+                checkedRows: [],
+                facilities: datas2,
+                newRow: {},
+                updateRow: {},
+                meunRow: {}
+            },
+            methods: {
+                delRows: function () {
+                    var medical = this.newRow;
+                    var res = ajaxPost(medical, "/branch/querybname");
+                    this.facilities.push(this.newRow);
+                    this.newRow = {};
+                }
+
+
+
+
+            }
+        }
+    );
+
     new Vue({
         el: "#vueApp",
         data: {
@@ -214,7 +269,8 @@
             checkedRows: [],
             facilities: datas,
             newRow:{},
-            updateRow:{}
+            updateRow:{},
+            meunRow:{}
         },
         methods: {
             addRow: function () {
@@ -223,6 +279,14 @@
                 this.facilities.push(this.newRow);
                 this.newRow = {};
             },
+            // querymenuRow:function(){
+            //     var branch = this.meunRow;
+            //     var  res = ajaxPost(branch,"/branch/querybname");
+            //     this.facilities.push(this.meunRow);
+            //     this.meunRow = {};
+            //
+            // },
+
             queryByMcodeOrMname: function () {
                 var medical = this.newRow;
                 var res =ajaxPost(medical,"/medical/queryByMcodeOrMname");
