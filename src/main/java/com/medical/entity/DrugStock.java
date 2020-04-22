@@ -6,6 +6,6 @@ import lombok.Data;
 public class DrugStock {
     private Integer did;
     private Integer bid;
-    private Integer mid;
+    private Integer mcode;
     private Integer stock;
 }

@@ -30,11 +30,14 @@ public class LoginController {
 
         user= userMapper.Identify(user.getUsername(),user.getPassword());
         if(user!=null){
-            response.addCookie(new Cookie("userId",user.getId().toString()));
+            response.addCookie(new Cookie("userId",user.getUserid().toString()));
             return "登录成功";
         }else{
             return "登录失败";
         }
 
     }
+
+
+
 }

@@ -13,6 +13,7 @@ public class Empinfo {
     private String etellphone;
     private String eaddress;
     private String ejob;
+    private String bname;
 
 
 

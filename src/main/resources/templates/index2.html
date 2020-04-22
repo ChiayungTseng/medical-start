@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="../../favicon.ico">
+
+  <title>Dashboard Template for Bootstrap</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="static/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="static/css/dashboard.css" rel="stylesheet">
+
+  <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+  <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+  <script src="../../assets/js/ie-emulation-modes-warning.js"></script>
+  <link rel="stylesheet" href="../static/css/dashboard.css">
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+  <link rel="stylesheet" href="static/css/index2.css">
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">我们连锁药店</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">我们连锁药店</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="login.html">用户登录</a></li>
+        <li><a href="#">注册</a></li>
+        <li><a href="login.html">退出</a></li>
+        <li><a href="door.html">后台管理</a></li>
+      </ul>
+      <form class="navbar-form navbar-right">
+        <input type="text" class="form-control" placeholder="Search...">
+      </form>
+    </div>
+  </div>
+</nav>
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-3 col-md-2 sidebar">
+      <ul class="nav nav-sidebar">
+        <li class="active"><a href="index.html">首页 <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">公司简介</a></li>
+        <li><a href="index3.html">优秀员工</a></li>
+        <li><a href="index4.html">热销商品</a></li>
+      </ul>
+      <ul class="nav nav-sidebar">
+        <li><a href="index5.html">加盟我们</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div id="bg">
+  <ul>
+    <li style="opacity: 0; z-index: 344;">
+      <img src="static/img/6.jpg" alt="">
+    </li>
+  </ul>
+</div>
+<div class="tradition">
+  <h2>企业简介</h2>
+  <h3></h3>
+  <span>
+       &nbsp;&nbsp;大参林医药集团股份有限公司，是一家集医药制造、零售、批发为一体的集团化企业，2017年7月31日，正式在上海证券交易所主板上市。2018年年底，大参林集团实现含税总销售额超102亿元。截止2019年第三季度，大参林员工数量超过26000人，拥有门店4256家，遍布广东、广西、河南等国内十个省份。作为备受消费者推崇、业界瞩目的品牌，大参林连续四年总销售全国排名行业领先。</span><br>
+
+      &nbsp;&nbsp;<span>大参林以"满腔热情为人类健康服务"作为企业的使命，秉承"以尽可能低的价格提供绝对合格之商品，并尽最大限度满足顾客需求"的经营理念和"我们是演员，顾客是评委"的服务理念，并铸就了鲜明的企业品格——以推动行业发展为已任，积极承载社会责任。</span><br>
+
+      &nbsp;&nbsp;<span>参天竞物，大参林，正朝着中国药品零售行业顶级品牌企业发起冲刺！</span><br>
+      &nbsp;&nbsp;<span>参天竞物，大参林，正成长为中国极具国际竞争力的优秀企业！</span>
+</div>
+
+
+<script type="text/javascript">
+    main();
+    function main(){
+        var obj1 = document.getElementById('bg');
+        var li = obj1.getElementsByTagName('li');
+        var j = 0;
+        var iIndex = 1;
+        var timer ;
+        //			li[0].style.zIndex = 1;
+        for(var i=0;i <li.length;i++){
+            if(i == j){
+                li[i].style.opacity = '1';
+                continue;
+            }
+            else{
+                li[i].style.opacity = '0';
+            }
+        }
+        function startRoll(){
+            j++;
+            if(j>=li.length){
+                j = 0;
+            }
+            li[j].style.zIndex=iIndex;
+            iIndex++;
+            fadeIn(li[j],1);
+        }
+        function fadeIn(obj,period){
+            var COUNT = 50;
+            clearInterval(obj.timer);
+            obj.timer=setInterval(function(){
+                var opacicyValue = Number.parseFloat(obj.style.opacity);
+                opacicyValue += period/COUNT;
+                if(opacicyValue<1){
+                    obj.style.opacity = opacicyValue;
+                }
+                else{
+                    obj.style,opacity = 1;
+                    clearInterval(obj.timer);
+                    for(var i=0;i<li.length;i++){
+                        if(i==j){
+                            continue;
+                        }else{
+                            li[i].style.opacity = '0';
+                        }
+                    }
+                }
+            },1000/COUNT);
+        }
+        timer = setInterval(startRoll,2000);
+    }
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+<script src="static/css/bootstrap.min.css"></script>
+<!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+<script src="static/css/holder.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+</body>
+</html>

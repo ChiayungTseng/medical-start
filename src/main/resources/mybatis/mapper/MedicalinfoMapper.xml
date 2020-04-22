@@ -18,10 +18,10 @@
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from user
-    where id = #{id,jdbcType=INTEGER}
+    where userid = #{id,jdbcType=INTEGER}
   </delete>
     <insert id="insert" parameterType="com.medical.entity.User">
-    insert into user (id, username, password,
+    insert into user (userid, username, password,
       salt, phone_number, e_mail,
       status, image_url, create_time,
       modify_time)
@@ -141,6 +141,6 @@
       image_url = #{imageUrl,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       modify_time = #{modifyTime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=INTEGER}
+    where userid = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

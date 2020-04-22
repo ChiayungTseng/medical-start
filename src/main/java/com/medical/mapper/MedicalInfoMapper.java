@@ -1,5 +1,6 @@
 package com.medical.mapper;
 
+import com.medical.entity.Dindang;
 import com.medical.entity.MedicalInfo;
 import org.apache.ibatis.annotations.*;
 
@@ -16,11 +17,17 @@ public interface MedicalInfoMapper {
     })*/
     List<MedicalInfo> select();
 
+    @Select("select mcode,mname,mtype,mbirth,msell from medicalinfo ")
+    List<MedicalInfo> selectshop();
+
     @Select("select * from medicalinfo where mcode= #{mcode} " )
     MedicalInfo verification(@Param("mcode") String mcode);
 
     @Select("select * from medicalinfo where mid = #{mid}")
     MedicalInfo selectByMid(@Param("mid") Integer mid);
+
+    @Select("select msell from medicalinfo where mname= #{mname} ")
+    int searchmbuy (@Param("mname") String mname);
 
     @Select("select * fron medicalinfo where mcode LIKE concat(cancat('%',#{mcode}),'%')")
     MedicalInfo selectByMcodeOrMname(@Param("mid") String mid);
@@ -37,7 +44,6 @@ public interface MedicalInfoMapper {
 
     @Delete("delete from medicalinfo where mid=#{medicalinfo.mid}")
      int delete(@Param("medicalinfo") MedicalInfo medicalInfo);
-
 
 
 }

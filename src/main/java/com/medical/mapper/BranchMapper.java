@@ -21,8 +21,8 @@ public interface BranchMapper {
     @Select("select bname from branch")
     List<Branch> querybname();
 
-    @Insert("insert into branch(bname,baddress,btellphone)" +
-            "values (#{branch.bname},#{branch.baddress},#{branch.btellphone})")
+    @Insert("insert into branch(bid,bname,baddress,btellphone)" +
+            "values (#{branch.bid},#{branch.bname},#{branch.baddress},#{branch.btellphone})")
     public void save(@Param("branch")Branch branch);
 
     @Update("update branch set bname = #{branch.bname},baddress = #{branch.baddress}," +

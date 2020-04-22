@@ -11,27 +11,64 @@
     <script src="//cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
     <script src="//cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
     <script src="//cdn.bootcss.com/vue/2.5.8/vue.min.js"></script>
+    <style>
+        body{
+            background: darkseagreen;
+        }
+
+        .header {
+            background-color: #8FBC8F;
+            height: 30px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .header, .dl-main-nav {
+            background: #8FBC8F;
+        }
+        .welcome{
+            margin-left: 1300px;
+            font-size: 15px;
+            color: white;
+        }
+        .dl-log-quit{
+            font-size: 15px;
+            color: white;
+        }
+        .navbar-nav{
+            background: green;
+        }
+
+    </style>
 
 </head>
 <body>
-<div class="jumbotron text-center" style="margin-bottom:0">
-    <h1></h1>
+<div class="header">
+
+    <div class="dl-title">
+    </div>
+
+    <div class="dl-log"><span class="welcome">欢迎您，root</span>
+        &nbsp;<a href="/chinapost/index.php?m=Public&amp;a=logout" title="退出系统" class="dl-log-quit">[退出]</a>
+    </div>
+
 </div>
+
 <nav class="navbar navbar-expand-md bg-light nav-light">
     <ul class="navbar-nav">
-        <li class="nav-item active" type="button"><a href="emp.html" class="nav-link">员工信息</a></li>
-        <li class="nav-item active" type="button"><a href="brand_medical.html" class="nav-link ">药品信息</a></li>
-        <li class="nav-item" type="button"><a href="branch.html" class="nav-link ">分店信息</a></li>
-        <!--<li class="nav-item" type="button"><a href="#" class="nav-link ">库存管理</a></li>-->
+        <li class="nav-item active" type="button"><a href="emp.html" class="nav-link">员工管理</a></li>
+        <li class="nav-item active" type="button"><a href="brand_medical.html" class="nav-link ">药品管理</a></li>
+        <li class="nav-item" type="button"><a href="branch.html" class="nav-link ">分店管理</a></li>
+       <!--<li class="nav-item" type="button"><a href="#" class="nav-link ">库存管理</a></li>-->
         <!-- Example single danger button -->
         <div class="btn-group">
-        <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button type="button" class="nav-item active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             库存管理
         </button>
-        <div class="dropdown-menu"  id="vueApp1" >
+        <div class="dropdown-menu"  id="branchApp" >
 
-            <a  class="dropdown-item" href="#" v-for="(facility,index) in facilities">
-                <button  @click="delRows">{{facility.bname}}</button>
+            <a  class="dropdown-item" href="#" v-for="(b,index) in branches">
+                <button  @click="findRows(b)">{{b.bname}}</button>
             </a>
         </div>
 
@@ -49,9 +86,11 @@
     <div class="row mx-auto w-75">
         <div class="col-6">
             <div class="btn-group">
-                <button type="button" class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#myModal">新增</button>
+                <button type="button" class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#sellModal">售出</button>
+                <button type="button" class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#buyModal">购入</button>
+                <button type="button" class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#calloutModal">调货</button>
+                <!--<button type="button" class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#transferinModal">调入</button>-->
             </div>
-            <button type="button" class="btn btn-outline-warning btn-sm" @click="delRows">删除</button>
         </div>
         <div class="col-6">
             <div class="input-group">
@@ -71,6 +110,7 @@
                 <tr>
                     <th><input type="checkbox"></th>
                     <th>序号</th>
+                    <th>分店编号</th>
                     <th>分店名</th>
                     <th>药品编号</th>
                     <th>药品名称</th>
@@ -82,12 +122,12 @@
                 <tr v-for="(facility,index) in facilities">
                     <td><input type="checkbox" :value="index" v-model="checkedRows"></td>
                     <td>{{index+1}}</td>
+                    <td contentEditable="false">{{facility.bid}}</td>
                     <td contentEditable="false">{{facility.bname}}</td>
                     <td contentEditable="false">{{facility.mcode}}</td>
                     <td contentEditable="false">{{facility.mname}}</td>
                     <td contentEditable="false">{{facility.mtype}}</td>
                     <td contentEditable="false">{{facility.stock}}</td>
-                    <td><button @click="update(index)" >编辑</button></td>
                 </tr>
                 </tbody>
             </table>
@@ -95,14 +135,20 @@
         </div>
     </div>
     <!-- 模态框 -->
-    <div class="modal fade" id="myModal">
+    <div class="modal fade" id="sellModal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">新增药品信息</h4>
+                    <h4 class="modal-title">售出药品</h4>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
+                    <div class="row">
+                        <div class="col-3">分店编号：</div>
+                        <div class="col-9">
+                            <input class="form-control" placeholder="分店编号" v-model="newRow.bid">
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-3">药品编号：</div>
                         <div class="col-9">
@@ -110,95 +156,125 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-3">药品名称：</div>
+                        <div class="col-3">数量：</div>
                         <div class="col-9">
-                            <input class="form-control" placeholder="药品名称" v-model="newRow.mname">
+                            <input class="form-control" placeholder="数量" v-model="newRow.stock">
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-3">药品类型：</div>
-                        <div class="col-9">
-                            <input class="form-control" placeholder="药品类型" v-model="newRow.mtype">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-3">采购日期：</div>
-                        <div class="col-9">
-                            <input class="form-control" placeholder="采购日期" v-model="newRow.mbirth">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-3">进货单价：</div>
-                        <div class="col-9">
-                            <input class="form-control" placeholder="进货单价" v-model="newRow.mbuy">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-3">销售单价：</div>
-                        <div class="col-9">
-                            <input class="form-control" placeholder="销售单价" v-model="newRow.msell">
-                        </div>
-                    </div>
-
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-primary" data-dismiss="modal" @click="addRow">确认</button>
+                    <button type="button" class="btn btn-outline-primary" data-dismiss="modal" @click="sellRow">确认</button>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- 模态框 -->
-    <div class="modal fade" id="updateModal">
+    <div class="modal fade" id="buyModal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">修改药品信息</h4>
+                    <h4 class="modal-title">购入药品</h4>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <!--<div class="row">-->
-                        <!--<div class="col-3">药品编号：</div>-->
-                        <!--<div class="col-9">-->
-                            <!--<input class="form-control" placeholder="药品编号" v-model="updateRow.mcode">-->
-                        <!--</div>-->
-                    <!--</div>-->
                     <div class="row">
-                        <div class="col-3">药品名称：</div>
+                        <div class="col-3">分店编号：</div>
                         <div class="col-9">
-                            <input class="form-control" placeholder="药品名称" v-model="updateRow.mname">
+                            <input class="form-control" placeholder="分店编号" v-model="buyRows.bid">
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-3">药品类型：</div>
+                        <div class="col-3">药品编号：</div>
                         <div class="col-9">
-                            <input class="form-control" placeholder="药品类型" v-model="updateRow.mtype">
+                            <input class="form-control" placeholder="药品编号" v-model="buyRows.mcode">
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-3">采购日期：</div>
+                        <div class="col-3">数量：</div>
                         <div class="col-9">
-                            <input class="form-control" placeholder="采购日期" v-model="updateRow.mbirth">
+                            <input class="form-control" placeholder="数量" v-model="buyRows.stock">
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-3">进货单价：</div>
-                        <div class="col-9">
-                            <input class="form-control" placeholder="进货单价" v-model="updateRow.mbuy">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-3">销售单价：</div>
-                        <div class="col-9">
-                            <input class="form-control" placeholder="销售单价" v-model="updateRow.msell">
-                        </div>
-                    </div>
-
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-primary" data-dismiss="modal" @click="saveRow">确认</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-
+                    <button type="button" class="btn btn-outline-primary" data-dismiss="modal" @click="buyRow">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="calloutModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">调出药品</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-3">调出分店编号：</div>
+                        <div class="col-9">
+                            <input class="form-control" placeholder="调出分店编号" v-model="calloutRows.cid">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">药品编号：</div>
+                        <div class="col-9">
+                            <input class="form-control" placeholder="药品编号" v-model="calloutRows.mcode">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">数量：</div>
+                        <div class="col-9">
+                            <input class="form-control" placeholder="数量" v-model="calloutRows.stock">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">调入分店名：</div>
+                        <div class="col-9">
+                            <input class="form-control" placeholder="调入分店名" v-model="calloutRows.tid">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-primary" data-dismiss="modal" @click="calloutRow">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="transferinModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">调入药品</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-3">调出分店名：</div>
+                        <div class="col-9">
+                            <input class="form-control" placeholder="分店名" v-model="transferinRows.cid">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">药品编号：</div>
+                        <div class="col-9">
+                            <input class="form-control" placeholder="药品编号" v-model="transferinRows.mcode">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">数量：</div>
+                        <div class="col-9">
+                            <input class="form-control" placeholder="数量" v-model="transferinRows.stock">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">调入分店名：</div>
+                        <div class="col-9">
+                            <input class="form-control" placeholder="数量" v-model="transferinRows.tid">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-primary" data-dismiss="modal" @click="transferinRow">确认</button>
                 </div>
             </div>
         </div>
@@ -209,75 +285,102 @@
 
 <script>
     var datas =[];
-    var datas2 =[];
-
+    var branchArray =[];
+    //显示所有库存
     $.ajax({
         async:false,
         type:"GET",
         url:"/drugstock/queryall",
         success:function(result){
-            datas = result;
+                datas = result;
+
         },
         error:function(xhr, textStatus, errorThrown){
             console.log("");
         }
     });
-
+    //显示分店名字
     $.ajax({
         async:false,
         type:"GET",
-        url:"/drugstock/query",
+        url:"/branch/querybname",
         success:function(result){
-            datas2 = result;
+            branchArray = result;
         },
         error:function(xhr, textStatus, errorThrown){
             console.log("");
         }
     });
 
-
-
     new Vue({
-            el: "#vueApp1",
+            el: "#branchApp",
             data: {
                 checkAll: false,
                 checkedRows: [],
-                facilities: datas2,
-                newRow: {},
+                branches: branchArray,
+                findRow: [],
                 updateRow: {},
                 meunRow: {}
             },
             methods: {
-                delRows: function () {
-                    var medical = this.newRow;
-                    var res = ajaxPost(medical, "/branch/querybname");
-                    this.facilities.push(this.newRow);
-                    this.newRow = {};
+                findRows: function (b) {
+                    tableUpdate(b);
                 }
-
-
-
 
             }
         }
     );
 
-    new Vue({
+    var tableVue =new Vue({
         el: "#vueApp",
         data: {
             checkAll: false,
             checkedRows: [],
             facilities: datas,
+            branches: branchArray,
             newRow:{},
-            updateRow:{},
+            buyRows:{},
+            calloutRows:{},
+            transferinRows:{},
             meunRow:{}
         },
         methods: {
-            addRow: function () {
-                var medical = this.newRow;
-                var res =ajaxPost(medical,"/medical/add");
+            //售出
+            sellRow: function () {
+                var stock = this.newRow;
+                var res =ajaxPost(stock,"/drugstock/sell");
                 this.facilities.push(this.newRow);
                 this.newRow = {};
+            },
+            //购进
+            buyRow: function () {
+                var stock = this.buyRows;
+                alert("提交成功");
+                var res =ajaxPost(stock,"/drugstock/buy");
+
+                this.facilities.push(this.buyRows);
+                this.buyRows = {};
+                //$('#buyModal').modal("show");
+            },
+            //调货
+            calloutRow: function () {
+                var calloutstock = this.calloutRows;
+                // alert("提交成功");
+                var res =ajaxPost(calloutstock,"/drugstock/callout");
+
+                this.facilities.push(this.calloutRows);
+                this.calloutRows = {};
+                //$('#buyModal').modal("show");
+            },
+            //调入
+            transferinRow: function () {
+                var transferinstock = this.buyRows;
+                alert("提交成功");
+                var res =ajaxPost(stock,"/drugstock/transferin");
+
+                this.facilities.push(this.buyRows);
+                this.buyRows = {};
+                //$('#buyModal').modal("show");
             },
             // querymenuRow:function(){
             //     var branch = this.meunRow;
@@ -294,19 +397,19 @@
                 this.newRow = {};
             },
 
-            saveRow:function () {//保存表格数据
-/*                if (this.checkedRows.length <= 0){
-                    alert("您未选择需要修改的数据");
-                    return false;
-                }
-                if (!confirm("您确定要修改选择的数据吗？")){
-                    return false;
-                }*/
-                var rData =this.updateRow;
-                var res =ajaxPost(rData,"/medical/update");
-                this.checkedRows = [];
-                alert("修改成功");
-            },
+//             buyRow:function () {//保存表格数据
+// /*                if (this.checkedRows.length <= 0){
+//                     alert("您未选择需要修改的数据");
+//                     return false;
+//                 }
+//                 if (!confirm("您确定要修改选择的数据吗？")){
+//                     return false;
+//                 }*/
+//                 var rData =this.buyRow;
+//                 var res =ajaxPost(rData,"/drugstock/buy");
+//                 this.checkedRows = [];
+//                 alert("修改成功");
+//             },
 
             //编辑
             update:function(index){
@@ -339,6 +442,12 @@
         }
 
     });
+    function tableUpdate(branch) {
+
+        var res = ajaxPost(branch, "/drugstock/query");
+
+        tableVue.facilities= res;
+    }
     function ajaxPost(rData,rUrl) {
         var res;
         $.ajax({

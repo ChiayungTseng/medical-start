@@ -11,11 +11,12 @@ public class MedicalInfo {
     private String mcode;
     private  String mname;
     private String mtype;
-
-   @JsonFormat(pattern = "yyyy-MM-dd HH:ss")
+   @JsonFormat(pattern = "yyyy-MM-dd")
     private Date mbirth;
     private Float mbuy;
     private Float msell;
+    private int amount;
+    private int total;
 
 
 }

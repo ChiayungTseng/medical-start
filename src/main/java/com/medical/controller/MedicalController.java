@@ -1,5 +1,6 @@
 package com.medical.controller;
 
+import com.medical.entity.Dindang;
 import com.medical.entity.MedicalInfo;
 import com.medical.mapper.MedicalInfoMapper;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,7 +11,7 @@ import javax.annotation.Resource;
 import java.util.*;
 
 @RestController
-@RequestMapping("/medical")
+@RequestMapping("/medicalinfo")
 public class MedicalController {
     @Resource
     private MedicalInfoMapper medicalInfoMapper;
@@ -18,6 +19,12 @@ public class MedicalController {
     @RequestMapping("/query")
     public List<MedicalInfo> query(){
         List<MedicalInfo> medicalList = medicalInfoMapper.select();
+        return medicalList;
+    }
+
+    @RequestMapping("/queryshop")
+    public List<MedicalInfo> queryshop(){
+        List<MedicalInfo> medicalList = medicalInfoMapper.selectshop();
         return medicalList;
     }
 
