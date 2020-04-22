@@ -34,6 +34,7 @@ public class OrderController {
         int dindanginfo = 0;
         List<DindangInfo> dindangInfoLists = dindang.getDindangInfoList();
         for(DindangInfo dindangInfo:dindangInfoLists){
+            dindangInfo.setOrderid(dindang.getOrderid());
              dindanginfo = dindangMapper.dindanginfo(dindangInfo);
         }
         int a=buyorder+dindanginfo;

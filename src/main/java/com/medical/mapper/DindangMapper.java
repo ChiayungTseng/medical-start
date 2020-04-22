@@ -5,10 +5,7 @@ import com.medical.entity.Dindang;
 import com.medical.entity.DindangInfo;
 import com.medical.entity.MedicalInfo;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -40,6 +37,7 @@ public interface DindangMapper {
 
     @Insert("insert into dindang(orderaddress,usertellphone) " +
             "values(#{orderaddress},#{usertellphone})")
+    @Options(useGeneratedKeys = true, keyProperty = "orderid", keyColumn = "orderid")//这段代码会让数据自动生成的主键赋值到对象
     int buyorder(Dindang dindang);
 
     @Insert("insert into dindanginfo(orderid,mname,amount,msell) " +
