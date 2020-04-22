@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -27,7 +28,8 @@ public class OrderController {
 
 //插入订单信息
     @RequestMapping("/dindang")
-    public Integer dindang(Dindang dindang){
+    public Integer dindang(@RequestBody Dindang dindang){
+        if (dindang.getOrderdate()==null)dindang.setOrderdate(new Date());
         int buyorder = dindangMapper.buyorder(dindang);
         int dindanginfo = 0;
         List<DindangInfo> dindangInfoLists = dindang.getDindangInfoList();

@@ -91,7 +91,7 @@
                             <td>{{index+1}}</td>
                             <td>{{facility.mname}}</td>
                             <td>{{facility.msell}}</td>
-                            <td><input type="number" min="0" max="1000" step="any" style="width: 50px"></td>
+                            <td><input type="number" min="0" max="1000" step="any" style="width: 50px" v-model="facility.amount"></td>
                             <!--<td><button type="button" class="btn btn-outline-info btn-sm" @click="update(index)" >编辑</button></td>-->
                         </tr>
                         </tbody>

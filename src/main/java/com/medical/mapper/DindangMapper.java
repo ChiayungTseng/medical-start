@@ -42,8 +42,8 @@ public interface DindangMapper {
             "values(#{orderaddress},#{usertellphone})")
     int buyorder(Dindang dindang);
 
-    @Insert("insert into dindanginfo(mname,amount,msell) " +
-            "values(#{mname},#{amount},#{msell})")
+    @Insert("insert into dindanginfo(orderid,mname,amount,msell) " +
+            "values(#{orderid},#{mname},#{amount},#{msell})")
     int dindanginfo(DindangInfo dindangInfo);
 
     @Update("update dindang set count = #{count} where orderid = #{orderid})")
