@@ -168,8 +168,8 @@
                 }
                 var dindang = new Object();
                 dindang.orderaddress = this.orderaddress;
-                dindang.tellphone = this.tellphone;
-                dindang.medicalinfoList = rData;
+                dindang.usertellphone = this.usertellphone;//dindang.tellphone = this.tellphone;
+                dindang.dindangInfoList = rData;//dindang.medicalinfoList = rData;
                 var res = ajaxPost(dindang,"/order/dindang")
             },
             delRows:function () {

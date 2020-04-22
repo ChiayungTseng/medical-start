@@ -17,7 +17,7 @@ public class Dindang {
         private Date orderdate;
         private String orderaddress;
         private String usertellphone;
-        List<DindangInfo> dindangInfoList;
+        List<DindangInfo> dindangInfoList;//药品订单
     }
 
 
